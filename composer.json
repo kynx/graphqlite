@@ -1,0 +1,38 @@
+{
+    "name": "kynx/graphqlite-php",
+    "description": "Talk to embedded GraphQLite database",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["graph database", "graph", "database", "sqlite"],
+    "autoload": {
+        "psr-4": {
+            "Kynx\\GraphQLite\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KynxTest\\GraphQLite\\": "test/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matt Kynaston",
+            "email": "matt@kynx.org"
+        }
+    ],
+    "require": {
+        "php": "^8.3.0 || ^8.4.0 || ^8.5.0",
+        "ext-sqlite3": "*"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "^3.1",
+        "phpunit/phpunit": "^12.5, >=12.5.8",
+        "vimeo/psalm": "^6.14"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        },
+        "sort-packages": true
+    }
+}
