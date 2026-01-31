@@ -1,9 +1,9 @@
 {
-    "name": "kynx/graphqlite-php",
+    "name": "kynx/graphqlite",
     "description": "Talk to embedded GraphQLite database",
     "type": "library",
     "license": "MIT",
-    "keywords": ["graph database", "graph", "database", "sqlite"],
+    "keywords": ["graphqlite", "graph database", "graph", "database", "sqlite"],
     "autoload": {
         "psr-4": {
             "Kynx\\GraphQLite\\": "src/"
@@ -21,18 +21,32 @@
         }
     ],
     "require": {
-        "php": "^8.3.0 || ^8.4.0 || ^8.5.0",
-        "ext-sqlite3": "*"
+        "php": "^8.4.0 || ^8.5.0",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^3.1",
         "phpunit/phpunit": "^12.5, >=12.5.8",
+        "psalm/plugin-phpunit": "^0.19.5",
         "vimeo/psalm": "^6.14"
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": false
+            "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@static-analysis",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "static-analysis": "psalm --no-cache",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always"
     }
 }

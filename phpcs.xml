@@ -14,7 +14,6 @@
     <ini name="memory_limit" value="512M"/>
 
     <!-- Paths to check -->
-    <file>bin</file>
     <file>src</file>
     <file>test</file>
 

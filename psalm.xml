@@ -7,12 +7,17 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     ensureOverrideAttribute="false"
     findUnusedPsalmSuppress="true"
+    errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
-        <directory name="src" />
-        <directory name="test" />
+        <directory name="src"/>
+        <directory name="test"/>
         <ignoreFiles>
-            <directory name="vendor" />
+            <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
+
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
 </psalm>

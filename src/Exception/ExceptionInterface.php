@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Kynx\GraphQLite\Exception;
+
+use Throwable;
+
+interface ExceptionInterface extends Throwable
+{
+}

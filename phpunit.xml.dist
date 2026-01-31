@@ -22,4 +22,8 @@
             <directory>src</directory>
         </include>
     </source>
+
+    <php>
+        <env name="GRAPHQLITE_EXTENSION_PATH" value="" />
+    </php>
 </phpunit>
