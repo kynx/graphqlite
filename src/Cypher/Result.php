@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GraphQLite\Cypher;
 
 use Countable;
 use Kynx\GraphQLite\Exception\OutOfBoundsException;
@@ -14,7 +14,7 @@ use function count;
 /**
  * @implements SeekableIterator<int, array>
  */
-final class CypherResult implements SeekableIterator, Countable
+final class Result implements SeekableIterator, Countable
 {
     /** @var list<array> */
     private array $data;
