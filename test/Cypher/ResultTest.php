@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite;
+namespace KynxTest\GraphQLite\Cypher;
 
-use Kynx\GraphQLite\CypherResult;
+use Kynx\GraphQLite\Cypher\Result;
 use Kynx\GraphQLite\Exception\OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(CypherResult::class)]
-final class CypherResultTest extends TestCase
+#[CoversClass(\Kynx\GraphQLite\Cypher\Result::class)]
+final class ResultTest extends TestCase
 {
     public function testGetColumnsReturnsColumns(): void
     {
         $expected     = ['foo', 'bar'];
-        $cypherResult = new CypherResult([], $expected);
+        $cypherResult = new \Kynx\GraphQLite\Cypher\Result([], $expected);
 
         $actual = $cypherResult->getColumns();
         self::assertSame($expected, $actual);
@@ -23,7 +23,7 @@ final class CypherResultTest extends TestCase
 
     public function testCurrentThrowsExceptionWhenOutOfBounds(): void
     {
-        $cypherResult = new CypherResult([], []);
+        $cypherResult = new \Kynx\GraphQLite\Cypher\Result([], []);
 
         self::expectException(OutOfBoundsException::class);
         $cypherResult->current();
@@ -32,7 +32,7 @@ final class CypherResultTest extends TestCase
     public function testResultIsIterable(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new CypherResult($rows, ['foo']);
+        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
 
         foreach ($cypherResult as $i => $row) {
             self::assertSame($rows[$i], $row);
@@ -42,7 +42,7 @@ final class CypherResultTest extends TestCase
     public function testResultIsSeekable(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new CypherResult($rows, ['foo']);
+        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
 
         $cypherResult->next();
         $cypherResult->seek(0);
@@ -58,7 +58,7 @@ final class CypherResultTest extends TestCase
     public function testCount(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new CypherResult($rows, ['foo']);
+        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
 
         $actual = $cypherResult->count();
         self::assertSame(2, $actual);

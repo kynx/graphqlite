@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GraphQLite\Cypher;
 
 use Countable;
 use Iterator;
@@ -15,7 +15,7 @@ use function count;
 /**
  * @implements SeekableIterator<int, array<array|scalar>>
  */
-final class CypherResult implements SeekableIterator, Countable
+final class Result implements SeekableIterator, Countable
 {
     /** @var list<array<array|scalar>> $data */
     private array $data;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kynx\GraphQLite;
 
 use JsonException;
+use Kynx\GraphQLite\Cypher\Result;
 use Kynx\GraphQLite\Exception\ExtensionException;
 use Kynx\GraphQLite\Exception\InvalidQueryException;
 use Kynx\GraphQLite\Exception\InvalidResultException;
@@ -25,6 +26,8 @@ use const JSON_THROW_ON_ERROR;
 
 final readonly class Connection implements ConnectionInterface
 {
+    public const string MEMORY = ':memory:';
+
     private const int JSON_DECODE_FLAGS = JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING;
 
     private function __construct(private Sqlite $connection, string $extensionPath)
@@ -33,17 +36,17 @@ final readonly class Connection implements ConnectionInterface
         $this->loadExtension($extensionPath);
     }
 
-    public static function connect(string $dsn, string $extensionPath): self
+    public static function connect(string $extensionPath, string $database = self::MEMORY): self
     {
-        return self::wrap(new Sqlite("sqlite:$dsn"), $extensionPath);
+        return self::wrap($extensionPath, new Sqlite("sqlite:$database"));
     }
 
-    public static function wrap(Sqlite $connection, string $extensionPath): self
+    public static function wrap(string $extensionPath, Sqlite $connection): self
     {
         return new self($connection, $extensionPath);
     }
 
-    public function cypher(string $query, array $params = []): CypherResult
+    public function cypher(string $query, array $params = []): Result
     {
         if ($params !== []) {
             $statement       = $this->connection->prepare('SELECT cypher(:query, :json)');
@@ -62,11 +65,11 @@ final readonly class Connection implements ConnectionInterface
         /** @var mixed $json */
         $json = $statement->fetchColumn() ?? false;
         if ($json === false) {
-            return new CypherResult([], []);
+            return new Result([], []);
         }
 
         if (! is_string($json) || str_starts_with($json, 'Query executed')) {
-            return new CypherResult([], []);
+            return new Result([], []);
         }
 
         try {
@@ -76,33 +79,33 @@ final readonly class Connection implements ConnectionInterface
         }
 
         if ($data === null) {
-            return new CypherResult([], []);
+            return new Result([], []);
         }
 
         if (! is_array($data)) {
-            return new CypherResult([['result' => $data]], ['result']);
+            return new Result([['result' => $data]], ['result']);
         }
 
         if ($data === []) {
-            return new CypherResult([], []);
+            return new Result([], []);
         }
 
         if (array_is_list($data)) {
             $first = $data[0] ?? [];
             if ($first === []) {
-                return new CypherResult([], []);
+                return new Result([], []);
             }
             if (is_array($first) && ! array_is_list($first)) {
-                return new CypherResult($data, array_keys($first));
+                return new Result($data, array_keys($first));
             }
 
             // List of scalars - this happens when C returns raw JSON array
             // for single-cell queries (e.g., range(), tail(), graph algorithms)
             // Treat as single row with the original JSON string as value
-            return new CypherResult([['result' => $json]], ['result']);
+            return new Result([['result' => $json]], ['result']);
         }
 
-        return new CypherResult([$data], array_keys($data));
+        return new Result([$data], array_keys($data));
     }
 
     public function beginTransaction(): void

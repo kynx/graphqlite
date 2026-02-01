@@ -8,12 +8,13 @@ use Kynx\GraphQLite\Connection;
 use Kynx\GraphQLite\Exception\ExtensionException;
 use Kynx\GraphQLite\Exception\InvalidQueryException;
 use Pdo\Sqlite;
+use PDOException;
+use PDOStatement;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 use function array_map;
 use function file_exists;
-use function getenv;
 use function iterator_to_array;
 use function sys_get_temp_dir;
 use function tempnam;
@@ -22,6 +23,8 @@ use function unlink;
 #[CoversClass(Connection::class)]
 final class ConnectionTest extends TestCase
 {
+    use ConnectionTrait;
+
     private string $extensionPath = '';
     private ?string $databasePath = null;
 
@@ -29,12 +32,7 @@ final class ConnectionTest extends TestCase
     {
         parent::setUp();
 
-        $envVar = (string) getenv('GRAPHQLITE_EXTENSION_PATH');
-        if ($envVar === '') {
-            self::fail("GRAPHQLITE_EXTENSION_PATH environment variable not set");
-        }
-
-        $this->extensionPath = $envVar;
+        $this->extensionPath = $this->getExtensionPath();
     }
 
     protected function tearDown(): void
@@ -51,7 +49,7 @@ final class ConnectionTest extends TestCase
         $extensionPath = __DIR__ . '/non-existing-extension.so';
         self::expectException(ExtensionException::class);
         self::expectExceptionMessage("SQLLite failed to load '$extensionPath'");
-        Connection::connect(':memory:', $extensionPath);
+        Connection::connect($extensionPath, ':memory:');
     }
 
     public function testConnectConnectsWithDefaultConfiguration(): void
@@ -67,7 +65,7 @@ final class ConnectionTest extends TestCase
     {
         $expected   = ['n' => 1];
         $existing   = new Sqlite('sqlite:memory:');
-        $connection = Connection::wrap($existing, $this->extensionPath);
+        $connection = Connection::wrap($this->extensionPath, $existing);
         $result     = $connection->cypher("RETURN 1 AS n");
         $actual     = $result->current();
         self::assertSame($expected, $actual);
@@ -77,7 +75,7 @@ final class ConnectionTest extends TestCase
     {
         $expected   = ['n' => 1];
         $path       = $this->getDatabasePath();
-        $connection = Connection::connect("$path", $this->extensionPath);
+        $connection = Connection::connect($this->extensionPath, "$path");
         $result     = $connection->cypher("RETURN 1 AS n");
         $actual     = $result->current();
         self::assertSame($expected, $actual);
@@ -171,8 +169,8 @@ final class ConnectionTest extends TestCase
             ['n.name' => 'Alice', 'n.age' => 30],
         ];
         $path     = $this->getDatabasePath();
-        $conn1    = Connection::connect("$path", $this->extensionPath);
-        $conn2    = Connection::connect("$path", $this->extensionPath);
+        $conn1    = Connection::connect($this->extensionPath, "$path");
+        $conn2    = Connection::connect($this->extensionPath, "$path");
         $conn1->beginTransaction();
         $conn1->cypher("CREATE (n:Person {name: 'Alice', age: 30})");
         $conn1->commit();
@@ -185,8 +183,8 @@ final class ConnectionTest extends TestCase
     public function testRollback(): void
     {
         $path  = $this->getDatabasePath();
-        $conn1 = Connection::connect("$path", $this->extensionPath);
-        $conn2 = Connection::connect("$path", $this->extensionPath);
+        $conn1 = Connection::connect($this->extensionPath, "$path");
+        $conn2 = Connection::connect($this->extensionPath, "$path");
         $conn1->beginTransaction();
         $conn1->cypher("CREATE (n:Person {name: 'Alice', age: 30})");
         $conn1->rollback();
@@ -204,9 +202,31 @@ final class ConnectionTest extends TestCase
         $connection->cypher("FOO (n:NonExistent) RETURN n");
     }
 
-    private function getConnection(): Connection
+    public function testLoadExtensionWithPdoExceptionThrowsException(): void
     {
-        return Connection::connect(":memory:", $this->extensionPath);
+        $database = self::createStub(Sqlite::class);
+        $database->method('query')
+            ->with('SELECT graphqlite_test()')
+            ->willThrowException(new PDOException('Boom!'));
+
+        self::expectException(ExtensionException::class);
+        self::expectExceptionMessage('Boom!');
+        Connection::wrap($this->extensionPath, $database);
+    }
+
+    public function testLoadExtensionWithFailureMessageThrowsException(): void
+    {
+        $statement = self::createStub(PDOStatement::class);
+        $statement->method('fetchColumn')
+            ->willReturn('Failed to load');
+        $database = self::createStub(Sqlite::class);
+        $database->method('query')
+            ->with('SELECT graphqlite_test()')
+            ->willReturn($statement);
+
+        self::expectException(ExtensionException::class);
+        self::expectExceptionMessage('Failed to load');
+        Connection::wrap($this->extensionPath, $database);
     }
 
     private function getDatabasePath(): string
