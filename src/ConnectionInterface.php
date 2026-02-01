@@ -6,6 +6,9 @@ namespace Kynx\GraphQLite;
 
 interface ConnectionInterface
 {
+    /**
+     * @param array<string, null|scalar> $params
+     */
     public function cypher(string $query, array $params = []): CypherResult;
 
     public function beginTransaction(): void;

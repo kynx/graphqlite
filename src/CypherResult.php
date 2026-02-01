@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kynx\GraphQLite;
 
 use Countable;
+use Iterator;
 use Kynx\GraphQLite\Exception\OutOfBoundsException;
 use SeekableIterator;
 
@@ -12,16 +13,16 @@ use function array_values;
 use function count;
 
 /**
- * @implements SeekableIterator<int, array>
+ * @implements SeekableIterator<int, array<array|scalar>>
  */
 final class CypherResult implements SeekableIterator, Countable
 {
-    /** @var list<array> */
+    /** @var list<array<array|scalar>> $data */
     private array $data;
     private int $position;
 
     /**
-     * @param array<array-key, array> $data
+     * @param array<array<array|scalar>> $data
      * @param list<array-key> $columns
      */
     public function __construct(array $data, private readonly array $columns)
@@ -30,11 +31,17 @@ final class CypherResult implements SeekableIterator, Countable
         $this->position = 0;
     }
 
+    /**
+     * @return list<array-key>
+     */
     public function getColumns(): array
     {
         return $this->columns;
     }
 
+    /**
+     * @return array<array|scalar>
+     */
     public function current(): array
     {
         if (! $this->valid()) {

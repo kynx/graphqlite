@@ -65,7 +65,7 @@ final readonly class Connection implements ConnectionInterface
             return new CypherResult([], []);
         }
 
-        if (str_starts_with((string) $json, 'Query executed')) {
+        if (! is_string($json) || str_starts_with($json, 'Query executed')) {
             return new CypherResult([], []);
         }
 
@@ -130,6 +130,7 @@ final readonly class Connection implements ConnectionInterface
 
         try {
             $statement = $this->connection->query('SELECT graphqlite_test()', PDO::FETCH_NUM);
+            assert($statement !== false);
         } catch (PDOException $exception) {
             throw ExtensionException::failedToInitialize($exception->getMessage(), $exception);
         }
