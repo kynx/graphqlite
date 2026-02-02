@@ -20,14 +20,17 @@ final class EdgeTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @return array<string, array{Edge, mixed, bool}>
+     */
     public static function equalsProvider(): array
     {
         $edge = new Edge('aaa', 'bbb', 'PARENT', ['a' => 'b']);
         return [
-            'same edge' => [$edge, $edge, true],
+            'same edge'  => [$edge, $edge, true],
             'equal edge' => [$edge, new Edge('aaa', 'bbb', 'PARENT', ['a' => 'b']), true],
-            'not edge' => [$edge, new stdClass(), false],
-            'not equal' => [$edge, new Edge('aaa', 'bbb', 'PARENT', ['a' => 'c']), false],
+            'not edge'   => [$edge, new stdClass(), false],
+            'not equal'  => [$edge, new Edge('aaa', 'bbb', 'PARENT', ['a' => 'c']), false],
         ];
     }
 }

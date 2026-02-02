@@ -7,6 +7,8 @@ namespace KynxTest\GraphQLite;
 use Kynx\GraphQLite\Connection;
 use PHPUnit\Framework\TestCase;
 
+use function getenv;
+
 /**
  * @psalm-require-extends TestCase
  */

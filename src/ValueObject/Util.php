@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Kynx\GraphQLite\ValueObject;
 
+use function array_keys;
 use function count;
+use function is_array;
 use function ksort;
 
 final readonly class Util
@@ -19,6 +21,9 @@ final readonly class Util
      *
      * Arrays are considered equal if they have the same keys and the associated values
      * are strictly equal - (ie stricter than just `[1] == ['1']`)
+     *
+     * @param array<string, mixed> $a
+     * @param array<string, mixed> $b
      */
     public static function propertiesAreEqual(array $a, array $b): bool
     {

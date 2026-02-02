@@ -5,18 +5,24 @@ declare(strict_types=1);
 namespace Kynx\GraphQLite\Graph;
 
 use Kynx\GraphQLite\ConnectionInterface;
+use Kynx\GraphQLite\Cypher\Result;
 use Kynx\GraphQLite\Cypher\Util;
-
 use Kynx\GraphQLite\ValueObject\Node;
 
+use function array_merge;
+use function assert;
 use function is_array;
+use function is_scalar;
+use function is_string;
 use function json_decode;
 use function sprintf;
 
 /**
  * @internal
+ *
  * @psalm-internal \Kynx\GraphQLite
  * @psalm-internal \KynxTest\GraphQLite
+ * @psalm-import-type CypherColumn from Result
  */
 final readonly class Nodes
 {
@@ -121,10 +127,13 @@ final readonly class Nodes
         return $nodes;
     }
 
+    /**
+     * @param array<array-key, mixed> $node
+     */
     private function makeNode(array $node): Node
     {
-        $properties = $node['properties'] ?? [];
-        $id = $properties['id'] ?? '';
+        $properties = (array) ($node['properties'] ?? []);
+        $id         = is_scalar($properties['id'] ?? null) ? (string) $properties['id'] : '';
         unset($properties['id']);
 
         return new Node($id, $properties);

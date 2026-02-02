@@ -8,6 +8,9 @@ use function get_object_vars;
 
 final readonly class Edge
 {
+    /**
+     * @param array<array-key, mixed> $data
+     */
     public function __construct(
         public string $sourceId,
         public string $targetId,

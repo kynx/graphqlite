@@ -29,14 +29,17 @@ final class NodeTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @return array<string, array{Node, mixed, bool}>
+     */
     public static function equalsProvider(): array
     {
         $node = new Node('123', ['a' => 'b']);
         return [
-            'same node' => [$node, $node, true],
+            'same node'  => [$node, $node, true],
             'equal node' => [$node, new Node('123', ['a' => 'b']), true],
-            'not node' => [$node, new stdClass(), false],
-            'not equal' => [$node, new Node('123', ['a' => 'c']), false],
+            'not node'   => [$node, new stdClass(), false],
+            'not equal'  => [$node, new Node('123', ['a' => 'c']), false],
         ];
     }
 }

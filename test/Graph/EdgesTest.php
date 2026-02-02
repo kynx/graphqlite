@@ -24,7 +24,7 @@ final class EdgesTest extends TestCase
     {
         parent::setUp();
 
-        $connection = $this->getConnection();
+        $connection  = $this->getConnection();
         $this->nodes = new Nodes($connection);
         $this->edges = new Edges($connection);
     }

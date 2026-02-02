@@ -6,39 +6,97 @@ namespace Kynx\GraphQLite\Cypher;
 
 use Kynx\GraphQLite\Exception\InvalidArgumentException;
 
+use function array_keys;
+use function implode;
+use function in_array;
 use function is_bool;
 use function is_numeric;
 use function is_scalar;
 use function is_string;
 use function preg_replace;
-use function str_contains;
+use function str_replace;
 use function strtoupper;
+use function substr;
 
 final readonly class Util
 {
     private const array ESCAPE = [
         "\\" => "\\\\",
-        "'" => "\\'",
-        '"' => '\\"',
+        "'"  => "\\'",
+        '"'  => '\\"',
         "\n" => ' ',
         "\r" => ' ',
         "\t" => ' ',
     ];
 
     private const array RESERVED = [
-        # Clauses
-        'CREATE', 'MATCH', 'RETURN', 'WHERE', 'DELETE', 'SET', 'REMOVE',
-        'ORDER', 'BY', 'SKIP', 'LIMIT', 'WITH', 'UNWIND', 'AS', 'AND', 'OR',
-        'NOT', 'IN', 'IS', 'NULL', 'TRUE', 'FALSE', 'MERGE', 'ON', 'CALL',
-        'YIELD', 'DETACH', 'OPTIONAL', 'UNION', 'ALL', 'CASE', 'WHEN', 'THEN',
-        'ELSE', 'END', 'EXISTS', 'FOREACH',
-        # Aggregate functions
-        'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'COLLECT',
-        # List functions and expressions
-        'REDUCE', 'FILTER', 'EXTRACT', 'ANY', 'NONE', 'SINGLE',
-        # Other reserved words
-        'STARTS', 'ENDS', 'CONTAINS', 'XOR', 'DISTINCT', 'LOAD', 'CSV',
-        'USING', 'PERIODIC', 'COMMIT', 'CONSTRAINT', 'INDEX', 'DROP', 'ASSERT',
+        // Clauses
+        'CREATE',
+        'MATCH',
+        'RETURN',
+        'WHERE',
+        'DELETE',
+        'SET',
+        'REMOVE',
+        'ORDER',
+        'BY',
+        'SKIP',
+        'LIMIT',
+        'WITH',
+        'UNWIND',
+        'AS',
+        'AND',
+        'OR',
+        'NOT',
+        'IN',
+        'IS',
+        'NULL',
+        'TRUE',
+        'FALSE',
+        'MERGE',
+        'ON',
+        'CALL',
+        'YIELD',
+        'DETACH',
+        'OPTIONAL',
+        'UNION',
+        'ALL',
+        'CASE',
+        'WHEN',
+        'THEN',
+        'ELSE',
+        'END',
+        'EXISTS',
+        'FOREACH',
+        // Aggregate functions
+        'COUNT',
+        'SUM',
+        'AVG',
+        'MIN',
+        'MAX',
+        'COLLECT',
+        // List functions and expressions
+        'REDUCE',
+        'FILTER',
+        'EXTRACT',
+        'ANY',
+        'NONE',
+        'SINGLE',
+        // Other reserved words
+        'STARTS',
+        'ENDS',
+        'CONTAINS',
+        'XOR',
+        'DISTINCT',
+        'LOAD',
+        'CSV',
+        'USING',
+        'PERIODIC',
+        'COMMIT',
+        'CONSTRAINT',
+        'INDEX',
+        'DROP',
+        'ASSERT',
     ];
 
     /** @psalm-suppress UnusedConstructor */
@@ -90,7 +148,7 @@ final readonly class Util
         return match (true) {
             $value === null   => 'null',
             is_bool($value)   => $value ? 'true' : 'false',
-            is_string($value) => "'" . self::escape($value). "'",
+            is_string($value) => "'" . self::escape($value) . "'",
             is_scalar($value) => (string) $value,
             default           => throw InvalidArgumentException::notScalar($value),
         };

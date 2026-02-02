@@ -8,10 +8,14 @@ use Kynx\GraphQLite\ConnectionInterface;
 use Kynx\GraphQLite\Cypher\Util;
 use Kynx\GraphQLite\ValueObject\Edge;
 
+use function assert;
+use function is_array;
+use function is_string;
 use function sprintf;
 
 /**
  * @internal
+ *
  * @psalm-internal \Kynx\GraphQLite
  * @psalm-internal \KynxTest\GraphQLite
  */
@@ -48,8 +52,13 @@ final readonly class Edges
             return null;
         }
 
-        $row = $result->current();
-        return $this->makeEdge($sourceId, $targetId, (array) ($row['r'] ?? []));
+        $row      = $result->current();
+        $relation = $row['r']['type'] ?? '';
+        $data     = $row['r']['properties'] ?? [];
+
+        assert(is_string($relation) && is_array($data));
+
+        return $this->makeEdge($sourceId, $targetId, $relation, $data);
     }
 
     public function upsert(Edge $edge): void
@@ -99,22 +108,24 @@ final readonly class Edges
 
         $edges = [];
         foreach ($result as $row) {
-            $edges[] = $this->makeEdge(
-                (string) ($row['source'] ?? ''),
-                (string) ($row['target'] ?? ''),
-                (array) ($row['r'] ?? [])
-            );
+            $source   = $row['source'] ?? '';
+            $target   = $row['target'] ?? '';
+            $relation = $row['r']['type'] ?? '';
+            $data     = $row['r']['properties'] ?? [];
+
+            assert(is_string($source) && is_string($target) && is_string($relation) && is_array($data));
+
+            $edges[] = $this->makeEdge($source, $target, $relation, $data);
         }
 
         return $edges;
     }
 
     /**
-     * @param array<array-key, mixed> $edge
+     * @param array<array-key, mixed> $data
      */
-    private function makeEdge(string $sourceId, string $targetId, array $edge): Edge
+    private function makeEdge(string $sourceId, string $targetId, string $relation, array $data): Edge
     {
-        $data = $edge['properties'] ?? [];
-        return new Edge($sourceId, $targetId, $edge['type'] ?? '', $data);
+        return new Edge($sourceId, $targetId, $relation, $data);
     }
 }

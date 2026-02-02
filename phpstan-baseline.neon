@@ -1,37 +1,19 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<array\<array\|bool\|float\|int\|string\>\>, array\<int, array\<mixed, mixed\>\> given\.$#'
+			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<array\<array\<bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\>\>, array\<int, array\<array\<array\<bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\>\>\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
 
 		-
-			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<array\<array\|bool\|float\|int\|string\>\>, array\<int, array\<string, mixed\>\> given\.$#'
+			message: '#^Parameter \#1 \$a of static method Kynx\\GraphQLite\\ValueObject\\Util\:\:propertiesAreEqual\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Connection.php
+			path: src/ValueObject/Util.php
 
 		-
-			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<array\<array\|bool\|float\|int\|string\>\>, list given\.$#'
+			message: '#^Parameter \#2 \$b of static method Kynx\\GraphQLite\\ValueObject\\Util\:\:propertiesAreEqual\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Connection.php
-
-		-
-			message: '#^Method Kynx\\GraphQLite\\Cypher\\Result\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Cypher\\Result.php
-
-		-
-			message: '#^Method Kynx\\GraphQLite\\Cypher\\Result\:\:current\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Cypher\\Result.php
-
-		-
-			message: '#^Property Kynx\\GraphQLite\\Cypher\\Result\:\:\$data type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Cypher\\Result.php
+			path: src/ValueObject/Util.php

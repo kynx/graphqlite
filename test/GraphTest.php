@@ -31,7 +31,7 @@ final class GraphTest extends TestCase
             self::fail("GRAPHQLITE_EXTENSION_PATH environment variable not set");
         }
 
-        $connection = Connection::connect($extensionPath, ':memory:');
+        $connection  = Connection::connect($extensionPath, ':memory:');
         $this->nodes = new Nodes($connection);
         $this->edges = new Edges($connection);
         $this->graph = new Graph($connection);
@@ -65,7 +65,7 @@ final class GraphTest extends TestCase
     public function testGetAllNodesReturnsNodes(): void
     {
         $this->nodes->upsert(new Node('test_node'), 'Test');
-        
+
         $actual = $this->graph->getAllNodes();
         self::assertCount(1, $actual);
     }

@@ -9,13 +9,13 @@ use Kynx\GraphQLite\Exception\OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(\Kynx\GraphQLite\Cypher\Result::class)]
+#[CoversClass(Result::class)]
 final class ResultTest extends TestCase
 {
     public function testGetColumnsReturnsColumns(): void
     {
         $expected     = ['foo', 'bar'];
-        $cypherResult = new \Kynx\GraphQLite\Cypher\Result([], $expected);
+        $cypherResult = new Result([], $expected);
 
         $actual = $cypherResult->getColumns();
         self::assertSame($expected, $actual);
@@ -23,7 +23,7 @@ final class ResultTest extends TestCase
 
     public function testCurrentThrowsExceptionWhenOutOfBounds(): void
     {
-        $cypherResult = new \Kynx\GraphQLite\Cypher\Result([], []);
+        $cypherResult = new Result([], []);
 
         self::expectException(OutOfBoundsException::class);
         $cypherResult->current();
@@ -32,7 +32,7 @@ final class ResultTest extends TestCase
     public function testResultIsIterable(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
+        $cypherResult = new Result($rows, ['foo']);
 
         foreach ($cypherResult as $i => $row) {
             self::assertSame($rows[$i], $row);
@@ -42,7 +42,7 @@ final class ResultTest extends TestCase
     public function testResultIsSeekable(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
+        $cypherResult = new Result($rows, ['foo']);
 
         $cypherResult->next();
         $cypherResult->seek(0);
@@ -58,7 +58,7 @@ final class ResultTest extends TestCase
     public function testCount(): void
     {
         $rows         = [['foo' => 'bar'], ['foo' => 'baz']];
-        $cypherResult = new \Kynx\GraphQLite\Cypher\Result($rows, ['foo']);
+        $cypherResult = new Result($rows, ['foo']);
 
         $actual = $cypherResult->count();
         self::assertSame(2, $actual);

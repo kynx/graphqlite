@@ -6,6 +6,9 @@ namespace Kynx\GraphQLite\Exception;
 
 use Kynx\GraphQLite\Exception\ExceptionInterface;
 
+use function get_debug_type;
+use function sprintf;
+
 final class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
     public static function notScalar(mixed $value): self

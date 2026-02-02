@@ -69,6 +69,4 @@ final readonly class Graph implements GraphInterface
     {
         return $this->edges->getAll();
     }
-
-
 }

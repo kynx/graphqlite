@@ -11,6 +11,9 @@ use function get_object_vars;
 
 final readonly class Node
 {
+    /**
+     * @param array<array-key, mixed> $data
+     */
     public function __construct(public string $id, public array $data = [])
     {
         if (array_key_exists('id', $data)) {

@@ -15,7 +15,9 @@ use PDOException;
 
 use function array_is_list;
 use function array_keys;
+use function assert;
 use function is_array;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function str_contains;
@@ -24,6 +26,9 @@ use function str_starts_with;
 use const JSON_BIGINT_AS_STRING;
 use const JSON_THROW_ON_ERROR;
 
+/**
+ * @phpstan-import-type CypherColumn from Result
+ */
 final readonly class Connection implements ConnectionInterface
 {
     public const string MEMORY = ':memory:';
@@ -73,6 +78,7 @@ final readonly class Connection implements ConnectionInterface
         }
 
         try {
+            /** @var array<array<CypherColumn>>|false|null|true $data */
             $data = json_decode((string) $json, true, 512, self::JSON_DECODE_FLAGS);
         } catch (JsonException $exception) {
             throw InvalidResultException::fromInvalidJson($exception);
@@ -91,11 +97,11 @@ final readonly class Connection implements ConnectionInterface
         }
 
         if (array_is_list($data)) {
-            $first = $data[0] ?? [];
+            $first = $data[0];
             if ($first === []) {
                 return new Result([], []);
             }
-            if (is_array($first) && ! array_is_list($first)) {
+            if (! array_is_list($first)) {
                 return new Result($data, array_keys($first));
             }
 
