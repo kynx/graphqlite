@@ -56,7 +56,7 @@ final readonly class Nodes
         $current = $result->current();
         assert(isset($current['n']) && is_array($current['n']));
 
-        return $this->makeNode($current['n']);
+        return self::makeNode($current['n']);
     }
 
     public function upsert(Node $node, string $label): void
@@ -121,7 +121,7 @@ final readonly class Nodes
                 continue;
             }
 
-            $nodes[] = $this->makeNode($node);
+            $nodes[] = self::makeNode($node);
         }
 
         return $nodes;
@@ -130,7 +130,7 @@ final readonly class Nodes
     /**
      * @param array<array-key, mixed> $node
      */
-    private function makeNode(array $node): Node
+    public static function makeNode(array $node): Node
     {
         $properties = (array) ($node['properties'] ?? []);
         $id         = is_scalar($properties['id'] ?? null) ? (string) $properties['id'] : '';

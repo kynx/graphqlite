@@ -58,7 +58,7 @@ final readonly class Edges
 
         assert(is_string($relation) && is_array($data));
 
-        return $this->makeEdge($sourceId, $targetId, $relation, $data);
+        return self::makeEdge($sourceId, $targetId, $relation, $data);
     }
 
     public function upsert(Edge $edge): void
@@ -115,7 +115,7 @@ final readonly class Edges
 
             assert(is_string($source) && is_string($target) && is_string($relation) && is_array($data));
 
-            $edges[] = $this->makeEdge($source, $target, $relation, $data);
+            $edges[] = self::makeEdge($source, $target, $relation, $data);
         }
 
         return $edges;
@@ -124,7 +124,7 @@ final readonly class Edges
     /**
      * @param array<array-key, mixed> $data
      */
-    private function makeEdge(string $sourceId, string $targetId, string $relation, array $data): Edge
+    public static function makeEdge(string $sourceId, string $targetId, string $relation, array $data): Edge
     {
         return new Edge($sourceId, $targetId, $relation, $data);
     }
