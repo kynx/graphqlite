@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Kynx\GraphQLite\Graph;
 
 use Kynx\GraphQLite\ConnectionInterface;
+use Kynx\GraphQLite\Cypher\Result;
 use Kynx\GraphQLite\Cypher\Util;
 use Kynx\GraphQLite\ValueObject\Edge;
 
-use function assert;
-use function is_array;
-use function is_string;
+use function array_map;
+use function iterator_to_array;
 use function sprintf;
 
 /**
  * @internal
  *
- * @psalm-internal \Kynx\GraphQLite
- * @psalm-internal \KynxTest\GraphQLite
+ * @phpstan-type EdgeArray = array{type: string, properties: array<string, mixed>}
  */
 final readonly class Edges
 {
@@ -27,6 +26,7 @@ final readonly class Edges
 
     public function has(string $sourceId, string $targetId): bool
     {
+        /** @var Result<array{cnt: int}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (a {id: '%s'})-[r]->(b {id: '%s'}) RETURN COUNT(r) AS cnt",
             Util::escape($sourceId),
@@ -37,11 +37,12 @@ final readonly class Edges
             return false;
         }
 
-        return (int) ($result->current()['cnt'] ?? 0) > 0;
+        return (bool) $result->current()['cnt'];
     }
 
     public function get(string $sourceId, string $targetId): ?Edge
     {
+        /** @var Result<array{r: EdgeArray}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (a {id: '%s'})-[r]->(b {id: '%s'}) RETURN r",
             Util::escape($sourceId),
@@ -52,13 +53,8 @@ final readonly class Edges
             return null;
         }
 
-        $row      = $result->current();
-        $relation = $row['r']['type'] ?? '';
-        $data     = $row['r']['properties'] ?? [];
-
-        assert(is_string($relation) && is_array($data));
-
-        return self::makeEdge($sourceId, $targetId, $relation, $data);
+        $r = $result->current()['r'];
+        return self::makeEdge($sourceId, $targetId, $r['type'], $r['properties']);
     }
 
     public function upsert(Edge $edge): void
@@ -102,23 +98,20 @@ final readonly class Edges
      */
     public function getAll(): array
     {
+        /** @var Result<array{source: string, target: string, r: EdgeArray}> $result */
         $result = $this->connection->cypher(
             "MATCH (a)-[r]->(b) RETURN a.id AS source, b.id AS target, r"
         );
 
-        $edges = [];
-        foreach ($result as $row) {
-            $source   = $row['source'] ?? '';
-            $target   = $row['target'] ?? '';
-            $relation = $row['r']['type'] ?? '';
-            $data     = $row['r']['properties'] ?? [];
-
-            assert(is_string($source) && is_string($target) && is_string($relation) && is_array($data));
-
-            $edges[] = self::makeEdge($source, $target, $relation, $data);
-        }
-
-        return $edges;
+        return array_map(
+            static fn (array $row): Edge => self::makeEdge(
+                $row['source'],
+                $row['target'],
+                $row['r']['type'],
+                $row['r']['properties']
+            ),
+            iterator_to_array($result)
+        );
     }
 
     /**

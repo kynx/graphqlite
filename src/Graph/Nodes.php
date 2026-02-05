@@ -10,19 +10,15 @@ use Kynx\GraphQLite\Cypher\Util;
 use Kynx\GraphQLite\ValueObject\Node;
 
 use function array_merge;
-use function assert;
 use function is_array;
 use function is_scalar;
-use function is_string;
 use function json_decode;
 use function sprintf;
 
 /**
  * @internal
  *
- * @psalm-internal \Kynx\GraphQLite
- * @psalm-internal \KynxTest\GraphQLite
- * @psalm-import-type CypherColumn from Result
+ * @phpstan-type NodeArray = array{properties: array{id?: string, ...}}
  */
 final readonly class Nodes
 {
@@ -32,6 +28,7 @@ final readonly class Nodes
 
     public function has(string $id): bool
     {
+        /** @var Result<array{cnt: int}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (n {id: '%s'}) RETURN COUNT(n) AS cnt",
             Util::escape($id)
@@ -40,11 +37,12 @@ final readonly class Nodes
             return false;
         }
 
-        return (int) ($result->current()['cnt'] ?? 0) > 0;
+        return (bool) $result->current()['cnt'];
     }
 
     public function get(string $id): ?Node
     {
+        /** @var Result<array{n: NodeArray}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (n {id: '%s'}) RETURN n",
             Util::escape($id)
@@ -54,8 +52,6 @@ final readonly class Nodes
         }
 
         $current = $result->current();
-        assert(isset($current['n']) && is_array($current['n']));
-
         return self::makeNode($current['n']);
     }
 
@@ -98,10 +94,12 @@ final readonly class Nodes
     public function getAll(string $label = ''): array
     {
         if ($label === '') {
+            /** @var Result<array{result: string}|array{n: NodeArray}> $result */
             $result = $this->connection->cypher(
                 "MATCH (n) RETURN n"
             );
         } else {
+            /** @var Result<array{result: string}|array{n: NodeArray}> $result */
             $result = $this->connection->cypher(sprintf(
                 "MATCH (n:%s) RETURN n",
                 Util::escape($label)
@@ -111,7 +109,8 @@ final readonly class Nodes
         $nodes = [];
         foreach ($result as $row) {
             $node = null;
-            if (isset($row['result']) && is_string($row['result'])) {
+            if (isset($row['result'])) {
+                /** @var NodeArray|null|false $node */
                 $node = json_decode($row['result'], true);
             } elseif (isset($row['n']) && is_array($row['n'])) {
                 $node = $row['n'];
@@ -128,11 +127,11 @@ final readonly class Nodes
     }
 
     /**
-     * @param array<array-key, mixed> $node
+     * @param NodeArray $node
      */
     public static function makeNode(array $node): Node
     {
-        $properties = (array) ($node['properties'] ?? []);
+        $properties = $node['properties'];
         $id         = is_scalar($properties['id'] ?? null) ? (string) $properties['id'] : '';
         unset($properties['id']);
 

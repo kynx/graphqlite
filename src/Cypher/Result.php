@@ -12,17 +12,17 @@ use function array_values;
 use function count;
 
 /**
- * @phpstan-type CypherColumn = array<null|scalar>|null|scalar
- * @implements SeekableIterator<int, array<CypherColumn>>
+ * @template T of array
+ * @implements SeekableIterator<int, T>
  */
 final class Result implements SeekableIterator, Countable
 {
-    /** @var list<array<CypherColumn>> $data */
+    /** @var list<T> $data */
     private array $data;
     private int $position;
 
     /**
-     * @param array<array<CypherColumn>> $data
+     * @param array<T> $data
      * @param list<array-key> $columns
      */
     public function __construct(array $data, private readonly array $columns)
@@ -40,7 +40,7 @@ final class Result implements SeekableIterator, Countable
     }
 
     /**
-     * @return array<CypherColumn>
+     * @return T
      */
     public function current(): array
     {

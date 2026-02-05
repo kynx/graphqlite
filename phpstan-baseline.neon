@@ -1,10 +1,22 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<array\<array\<bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\>\>, array\<int, array\<array\<array\<bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\>\>\> given\.$#'
+			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<T of array\>, list given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
+
+		-
+			message: '#^Property Kynx\\GraphQLite\\Cypher\\Result\:\:\$data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cypher/Result.php
+
+		-
+			message: '#^Method Kynx\\GraphQLite\\Graph\\Queries\:\:query\(\) return type with generic class Kynx\\GraphQLite\\Cypher\\Result does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Graph/Queries.php
 
 		-
 			message: '#^Parameter \#1 \$a of static method Kynx\\GraphQLite\\ValueObject\\Util\:\:propertiesAreEqual\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'

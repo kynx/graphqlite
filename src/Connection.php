@@ -26,9 +26,6 @@ use function str_starts_with;
 use const JSON_BIGINT_AS_STRING;
 use const JSON_THROW_ON_ERROR;
 
-/**
- * @phpstan-import-type CypherColumn from Result
- */
 final readonly class Connection implements ConnectionInterface
 {
     public const string MEMORY = ':memory:';
@@ -78,7 +75,7 @@ final readonly class Connection implements ConnectionInterface
         }
 
         try {
-            /** @var array<array<CypherColumn>>|false|null|true $data */
+            /** @var array<string, mixed>|list<array<string, mixed>>|null|false $data */
             $data = json_decode((string) $json, true, 512, self::JSON_DECODE_FLAGS);
         } catch (JsonException $exception) {
             throw InvalidResultException::fromInvalidJson($exception);
@@ -101,7 +98,7 @@ final readonly class Connection implements ConnectionInterface
             if ($first === []) {
                 return new Result([], []);
             }
-            if (! array_is_list($first)) {
+            if (is_array($first) && ! array_is_list($first)) {
                 return new Result($data, array_keys($first));
             }
 

@@ -10,6 +10,7 @@ interface ConnectionInterface
 {
     /**
      * @param array<string, null|scalar> $params
+     * @return Result<covariant array<array-key, mixed>>
      */
     public function cypher(string $query, array $params = []): Result;
 

@@ -18,8 +18,8 @@ use function sprintf;
 /**
  * @internal
  *
- * @psalm-internal \Kynx\GraphQLite
- * @psalm-internal \KynxTest\GraphQLite
+ * @phpstan-import-type NodeArray from Nodes
+ * @phpstan-import-type EdgeArray from Edges
  */
 final readonly class Queries
 {
@@ -29,15 +29,16 @@ final readonly class Queries
 
     public function degree(string $nodeId): int
     {
+        /** @var Result<array{degree: int}> $result */
         $result = $this->connection->cypher(sprintf(
-            "MATCH (n {id: '%s'})-[r]-() RETURN count(r) AS degree",
+            "MATCH (n {id: '%s'})-[r]-() RETURN COUNT(r) AS degree",
             Util::escape($nodeId)
         ));
         if ($result->count() === 0) {
             return 0;
         }
 
-        return (int) ($result->current()['degree'] ?? 0);
+        return $result->current()['degree'];
     }
 
     /**
@@ -45,13 +46,14 @@ final readonly class Queries
      */
     public function neighbours(string $nodeId): array
     {
+        /** @var Result<array{m: NodeArray}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (n {id: '%s'})-[]-(m) RETURN DISTINCT m",
             Util::escape($nodeId)
         ));
 
         return array_map(
-            static fn (array $row): Node => Nodes::makeNode($row['m'] ?? []),
+            static fn (array $row): Node => Nodes::makeNode($row['m']),
             iterator_to_array($result),
         );
     }
@@ -61,6 +63,7 @@ final readonly class Queries
      */
     public function edges(string $nodeId): array
     {
+        /** @var Result<array{source: string, target: string, r: EdgeArray}> $result */
         $result = $this->connection->cypher(sprintf(
             "MATCH (n {id: '%s'})-[r]->(m) RETURN n.id AS source, m.id AS target, r ORDER BY m.id",
             Util::escape($nodeId)
@@ -82,12 +85,14 @@ final readonly class Queries
 
     public function stats(): Stats
     {
+        /** @var Result<array{cnt: int}> $nodes */
         $nodes = $this->connection->cypher("MATCH (n) RETURN COUNT(n) AS cnt");
+        /** @var Result<array{cnt: int}> $edges */
         $edges = $this->connection->cypher("MATCH ()-[r]->() RETURN COUNT(r) AS cnt");
 
         return new Stats(
-            (int) ($nodes->count() > 0 ? $nodes->current()['cnt'] ?? 0 : 0),
-            (int) ($edges->count() > 0 ? $edges->current()['cnt'] ?? 0 : 0),
+            $nodes->count() > 0 ? $nodes->current()['cnt'] : 0,
+            $edges->count() > 0 ? $edges->current()['cnt'] : 0,
         );
     }
 
