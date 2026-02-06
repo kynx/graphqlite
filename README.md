@@ -6,7 +6,7 @@ Talk to an embedded graph database with PHP.
 > missing features!
 
 This package provides a driver for the [SQLite]-based graph database [GraphQLite]. If you came here looking for 
-something to handle the [GraphQL protocol], you're in the wrong place: try [Packagist].
+something to handle the [GraphQL protocol], you're in the wrong place: try [Packagist]!
 
 ## Installation
 
@@ -14,13 +14,11 @@ something to handle the [GraphQL protocol], you're in the wrong place: try [Pack
 composer require kynx/graphqlite
 ```
 
-
 GraphQLite provides an SQLLite extension that must be available locally. You will need to ensure that is installed:
 
 ```bash
 brew install graphqlite       # macOS/Linux (Homebrew)
 pip install graphqlite        # Python
-cargo add graphqlite          # Rust
 ``` 
 
 Make a note of the path it's installed `graphqlite.(dylib|so|dll)` to - you will need this later.
@@ -30,23 +28,29 @@ Make a note of the path it's installed `graphqlite.(dylib|so|dll)` to - you will
 GraphQList uses the [Cypher] language:
 
 ```php
-use Kynx\GraphQLite\Connection;
+use Kynx\GraphQLite\Graph;
+use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GraphQLite\ValueObject\Edge;
 
-// Get a connection to an in-memory graph database - the DSN can take anything `Pdo\Sqlite` does, minus the 
-// leading `sqlite:`
-$graph = Connection::connect(':memory:', '/path/to/graphqlite.(dylib|so|dll)');
+// replace with path to GraphQLite extension installed above
+$extensionPath = getenv('GRAPHQLITE_EXTENSION_PATH');
 
-// Add a node
-$graph->cypher("CREATE (n:Person {name: 'Alice', age: 30})");
+// Get a connection to an in-memory graph database
+$graph = Graph::connect($extensionPath, ':memory:');
 
-// Run a query
-$results = $graph->cypher("MATCH (n:Person) RETURN n.name, n.age");
-foreach ($result as $row) {
-    echo $row['name'] . ': ' . $row['age'] . "\n";
+// Add some data
+$graph->nodes->upsert(new Node("alice", ["name" => "Alice", "age" => 30]), label: "Person");
+$graph->nodes->upsert(new Node("bob", ["name" => "Bob", "age" => 25]), label: "Person");
+$graph->edges->upsert(new Edge("alice", "bob", "KNOWS", ["since" => 2020]));
+
+# Query with Cypher
+$results = $graph->queries->query("MATCH (a:Person)-[:KNOWS]->(b) RETURN a.name AS a, b.name AS b");
+foreach ($results as $row) {
+    echo $row['a'] . ' knows ' . $row['b'] . "\n";
 }
 
 // outputs:
-// Alice: 30
+// Alice knows Bob
 ```
 
 This library closely follows upstream's Python bindings. Until we've got more documentation written, GraphQLite's
