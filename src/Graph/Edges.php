@@ -18,7 +18,7 @@ use function sprintf;
  *
  * @phpstan-type EdgeArray = array{type: string, properties: array<string, mixed>}
  */
-final readonly class Edges
+final readonly class Edges implements EdgesInterface
 {
     public function __construct(private ConnectionInterface $connection)
     {
@@ -53,8 +53,7 @@ final readonly class Edges
             return null;
         }
 
-        $r = $result->current()['r'];
-        return self::makeEdge($sourceId, $targetId, $r['type'], $r['properties']);
+        return self::makeEdge($sourceId, $targetId, $result->current()['r']);
     }
 
     public function upsert(Edge $edge): void
@@ -93,9 +92,6 @@ final readonly class Edges
         ));
     }
 
-    /**
-     * @return Edge[]
-     */
     public function getAll(): array
     {
         /** @var Result<array{source: string, target: string, r: EdgeArray}> $result */
@@ -104,21 +100,16 @@ final readonly class Edges
         );
 
         return array_map(
-            static fn (array $row): Edge => self::makeEdge(
-                $row['source'],
-                $row['target'],
-                $row['r']['type'],
-                $row['r']['properties']
-            ),
+            static fn (array $row): Edge => self::makeEdge($row['source'], $row['target'], $row['r']),
             iterator_to_array($result)
         );
     }
 
     /**
-     * @param array<array-key, mixed> $data
+     * @param EdgeArray $data
      */
-    public static function makeEdge(string $sourceId, string $targetId, string $relation, array $data): Edge
+    public static function makeEdge(string $sourceId, string $targetId, array $data): Edge
     {
-        return new Edge($sourceId, $targetId, $relation, $data);
+        return new Edge($sourceId, $targetId, $data['type'], $data['properties']);
     }
 }

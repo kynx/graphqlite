@@ -19,6 +19,12 @@ parameters:
 			path: src/Graph/Queries.php
 
 		-
+			message: '#^Method Kynx\\GraphQLite\\Graph\\QueriesInterface\:\:query\(\) return type with generic class Kynx\\GraphQLite\\Cypher\\Result does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Graph/QueriesInterface.php
+
+		-
 			message: '#^Parameter \#1 \$a of static method Kynx\\GraphQLite\\ValueObject\\Util\:\:propertiesAreEqual\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1

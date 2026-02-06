@@ -8,6 +8,8 @@ use Kynx\GraphQLite\Cypher\Result;
 
 interface ConnectionInterface
 {
+    public const string MEMORY = ':memory:';
+
     /**
      * @param array<string, null|scalar> $params
      * @return Result<covariant array<array-key, mixed>>

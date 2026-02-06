@@ -28,8 +28,6 @@ use const JSON_THROW_ON_ERROR;
 
 final readonly class Connection implements ConnectionInterface
 {
-    public const string MEMORY = ':memory:';
-
     private const int JSON_DECODE_FLAGS = JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING;
 
     private function __construct(private Sqlite $connection, string $extensionPath)

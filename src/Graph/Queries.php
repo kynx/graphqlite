@@ -18,15 +18,18 @@ use function sprintf;
 /**
  * @internal
  *
- * @phpstan-import-type NodeArray from Nodes
+ * @phpstan-import-type NodeArray from NodesInterface
  * @phpstan-import-type EdgeArray from Edges
  */
-final readonly class Queries
+final readonly class Queries implements QueriesInterface
 {
     public function __construct(private ConnectionInterface $connection)
     {
     }
 
+    /**
+     * Returns the degree (number of connections) of a node.
+     */
     public function degree(string $nodeId): int
     {
         /** @var Result<array{degree: int}> $result */
@@ -42,6 +45,8 @@ final readonly class Queries
     }
 
     /**
+     * Returns nodes connected by edges in either direction.
+     *
      * @return Node[]
      */
     public function neighbours(string $nodeId): array
@@ -59,6 +64,8 @@ final readonly class Queries
     }
 
     /**
+     * Returns all edges connected to a node.
+     *
      * @return Edge[]
      */
     public function edges(string $nodeId): array
@@ -73,16 +80,14 @@ final readonly class Queries
         }
 
         return array_map(
-            static fn (array $row): Edge => Edges::makeEdge(
-                $row['source'],
-                $row['target'],
-                $row['r']['type'],
-                $row['r']['properties']
-            ),
+            static fn (array $row): Edge => Edges::makeEdge($row['source'], $row['target'], $row['r']),
             iterator_to_array($result),
         );
     }
 
+    /**
+     * Returns statistics about the graph.
+     */
     public function stats(): Stats
     {
         /** @var Result<array{cnt: int}> $nodes */
@@ -96,6 +101,9 @@ final readonly class Queries
         );
     }
 
+    /**
+     * Returns result of raw cypher query
+     */
     public function query(string $cypher): Result
     {
         return $this->connection->cypher($cypher);

@@ -20,7 +20,7 @@ use function sprintf;
  *
  * @phpstan-type NodeArray = array{properties: array{id?: string, ...}}
  */
-final readonly class Nodes
+final readonly class Nodes implements NodesInterface
 {
     public function __construct(private ConnectionInterface $connection)
     {
@@ -88,9 +88,6 @@ final readonly class Nodes
         ));
     }
 
-    /**
-     * @return Node[]
-     */
     public function getAll(string $label = ''): array
     {
         if ($label === '') {
