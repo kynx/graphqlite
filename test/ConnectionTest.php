@@ -64,7 +64,7 @@ final class ConnectionTest extends TestCase
     public function testWrapWrapsExistingConnection(): void
     {
         $expected   = ['n' => 1];
-        $existing   = new Sqlite('sqlite:memory:');
+        $existing   = new Sqlite('sqlite::memory:');
         $connection = Connection::wrap($this->extensionPath, $existing);
         $result     = $connection->cypher("RETURN 1 AS n");
         $actual     = $result->current();

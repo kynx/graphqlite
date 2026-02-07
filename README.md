@@ -31,8 +31,8 @@ GraphQList uses the [Cypher] language:
 
 ```php
 use Kynx\GraphQLite\Graph;
-use Kynx\GraphQLite\ValueObject\Node;
 use Kynx\GraphQLite\ValueObject\Edge;
+use Kynx\GraphQLite\ValueObject\Node;
 
 // replace with path to GraphQLite extension installed above
 $extensionPath = getenv('GRAPHQLITE_EXTENSION_PATH');
@@ -40,13 +40,13 @@ $extensionPath = getenv('GRAPHQLITE_EXTENSION_PATH');
 // Get a connection to an in-memory graph database
 $graph = Graph::connect($extensionPath, ':memory:');
 
-// Add some data
-$graph->nodes->upsert(new Node("alice", ["name" => "Alice", "age" => 30]), label: "Person");
-$graph->nodes->upsert(new Node("bob", ["name" => "Bob", "age" => 25]), label: "Person");
+// Add some nodes and edges
+$graph->nodes->upsert(new Node("alice", ["name" => "Alice", "age" => 30], "Person"));
+$graph->nodes->upsert(new Node("bob", ["name" => "Bob", "age" => 25], "Person"));
 $graph->edges->upsert(new Edge("alice", "bob", "KNOWS", ["since" => 2020]));
 
-# Query with Cypher
-$results = $graph->queries->query("MATCH (a:Person)-[:KNOWS]->(b) RETURN a.name AS a, b.name AS b");
+// Query with Cypher
+$results = $graph->query("MATCH (a:Person)-[:KNOWS]->(b) RETURN a.name AS a, b.name AS b");
 foreach ($results as $row) {
     echo $row['a'] . ' knows ' . $row['b'] . "\n";
 }

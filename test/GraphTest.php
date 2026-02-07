@@ -26,7 +26,7 @@ final class GraphTest extends TestCase
         $graph->nodes->upsert($n1);
         $graph->nodes->upsert($n2);
         $graph->edges->upsert($e1);
-        $stats = $graph->queries->stats();
+        $stats = $graph->stats();
 
         self::assertTrue($graph->nodes->has('n1'));
         self::assertTrue($graph->edges->has('n1', 'n2'));
@@ -44,10 +44,23 @@ final class GraphTest extends TestCase
         $graph->nodes->upsert($n1);
         $graph->nodes->upsert($n2);
         $graph->edges->upsert($e1);
-        $stats = $graph->queries->stats();
+        $stats = $graph->stats();
 
         self::assertTrue($graph->nodes->has('n1'));
         self::assertTrue($graph->edges->has('n1', 'n2'));
         self::assertSame(2, $stats->nodes);
+    }
+
+    public function testQueryProxiesQuery(): void
+    {
+        $cypher     = "CREATE (n:Persion {id: 'alice', name: 'Alice'})";
+        $connection = $this->getConnection();
+
+        $graph = Graph::getInstance($connection);
+        $graph->query($cypher);
+
+        $actual = $graph->nodes->get('alice');
+        self::assertNotNull($actual);
+        self::assertSame('Alice', $actual->properties['name']);
     }
 }
