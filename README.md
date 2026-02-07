@@ -1,5 +1,7 @@
 # kynx/graphqlite
 
+[![Continuous Integration](https://github.com/kynx/graphqlite/actions/workflows/continuous-integration.yml/badge.svg?branch=main)](https://github.com/kynx/graphqlite/actions/workflows/continuous-integration.yml)
+
 Talk to an embedded graph database with PHP.
 
 > This project is in the early stages of development! Feel free to play, but bear in mind that there are a lot of
