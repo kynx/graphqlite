@@ -163,6 +163,45 @@ final class ConnectionTest extends TestCase
         self::assertFalse($results->valid());
     }
 
+    public function testCypherDollarParameters(): void
+    {
+        $expected   = [
+            ['n.name' => 'Alice', 'n.age' => 30],
+        ];
+        $connection = $this->getConnection();
+        $connection->cypher('CREATE (n:Person {name: $name, age: $age})', ['name' => 'Alice', 'age' => 30]);
+
+        $results = $connection->cypher("MATCH (n:Person) RETURN n.name, n.age");
+        $actual  = iterator_to_array($results);
+        self::assertSame($expected, $actual);
+    }
+
+    public function testStripsBacktickIdentifiers(): void
+    {
+        $expected   = [
+            ['n.name' => 'Alice', 'n.age' => 30],
+        ];
+        $connection = $this->getConnection();
+        $connection->cypher('CREATE (n:`Person` {name: $name, age: $age})', ['name' => 'Alice', 'age' => 30]);
+
+        $results = $connection->cypher("MATCH (n:Person) RETURN n.name, n.age");
+        $actual  = iterator_to_array($results);
+        self::assertSame($expected, $actual);
+    }
+
+    public function testAllowsBacktickIdentifiers(): void
+    {
+        $expected   = [
+            ['n.name' => 'Alice', 'n.age' => 30],
+        ];
+        $connection = $this->getConnection();
+        $connection->cypher('CREATE (n:`$Person` {name: $name, age: $age})', ['name' => 'Alice', 'age' => 30]);
+
+        $results = $connection->cypher('MATCH (n:`$Person`) RETURN n.name, n.age');
+        $actual  = iterator_to_array($results);
+        self::assertSame($expected, $actual);
+    }
+
     public function testCommit(): void
     {
         $expected = [

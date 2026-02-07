@@ -9,12 +9,6 @@ use Kynx\GraphQLite\ValueObject\Edge;
 use Kynx\GraphQLite\ValueObject\Node;
 use Kynx\GraphQLite\ValueObject\Stats;
 
-/**
- * @internal
- *
- * @phpstan-import-type NodeArray from NodesInterface
- * @phpstan-import-type EdgeArray from Edges
- */
 interface QueriesInterface
 {
     /**

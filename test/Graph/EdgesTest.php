@@ -31,16 +31,16 @@ final class EdgesTest extends TestCase
 
     public function testHasReturnsFalse(): void
     {
-        $this->nodes->upsert(new Node('node_1'), 'Test');
-        $this->nodes->upsert(new Node('node_2'), 'Test');
+        $this->nodes->upsert(new Node('node_1', [], 'Test'));
+        $this->nodes->upsert(new Node('node_2', [], 'Test'));
         $actual = $this->edges->has('node_1', 'node_2');
         self::assertFalse($actual);
     }
 
     public function testHasReturnsTrue(): void
     {
-        $this->nodes->upsert(new Node('node_1', ['a' => 'b']), 'Test');
-        $this->nodes->upsert(new Node('node_2', ['a' => 'b']), 'Test');
+        $this->nodes->upsert(new Node('node_1', ['a' => 'b'], 'Test'));
+        $this->nodes->upsert(new Node('node_2', ['a' => 'b'], 'Test'));
         $this->edges->upsert(new Edge('node_1', 'node_2'));
 
         $actual = $this->edges->has('node_1', 'node_2');
@@ -49,8 +49,8 @@ final class EdgesTest extends TestCase
 
     public function testGetReturnsNull(): void
     {
-        $this->nodes->upsert(new Node('node_1'), 'Test');
-        $this->nodes->upsert(new Node('node_2'), 'Test');
+        $this->nodes->upsert(new Node('node_1', [], 'Test'));
+        $this->nodes->upsert(new Node('node_2', [], 'Test'));
 
         $actual = $this->edges->get('node_1', 'node_2');
         self::assertNull($actual);
@@ -59,8 +59,8 @@ final class EdgesTest extends TestCase
     public function testGetReturnsEdge(): void
     {
         $expected = new Edge('cat', 'mouse', 'EATS', ['meal' => 'breakfast']);
-        $this->nodes->upsert(new Node('cat'), 'Feline');
-        $this->nodes->upsert(new Node('mouse'), 'Rodent');
+        $this->nodes->upsert(new Node('cat', [], 'Feline'));
+        $this->nodes->upsert(new Node('mouse', [], 'Rodent'));
         $this->edges->upsert($expected);
 
         $actual = $this->edges->get('cat', 'mouse');
@@ -69,8 +69,8 @@ final class EdgesTest extends TestCase
 
     public function testDeleteRemovesEdge(): void
     {
-        $this->nodes->upsert(new Node('node_1', ['a' => 'b']), 'Test');
-        $this->nodes->upsert(new Node('node_2', ['a' => 'b']), 'Test');
+        $this->nodes->upsert(new Node('node_1', ['a' => 'b'], 'Test'));
+        $this->nodes->upsert(new Node('node_2', ['a' => 'b'], 'Test'));
         $this->edges->upsert(new Edge('node_1', 'node_2'));
 
         $this->edges->delete('node_1', 'node_2');
@@ -80,9 +80,9 @@ final class EdgesTest extends TestCase
 
     public function testGetAllEdgesReturnsEdges(): void
     {
-        $this->nodes->upsert(new Node('node_1', ['a' => 'b']), 'Test');
-        $this->nodes->upsert(new Node('node_2', ['a' => 'b']), 'Test');
-        $this->nodes->upsert(new Node('node_3', ['a' => 'b']), 'Test');
+        $this->nodes->upsert(new Node('node_1', ['a' => 'b'], 'Test'));
+        $this->nodes->upsert(new Node('node_2', ['a' => 'b'], 'Test'));
+        $this->nodes->upsert(new Node('node_3', ['a' => 'b'], 'Test'));
         $this->edges->upsert(new Edge('node_1', 'node_2'));
         $this->edges->upsert(new Edge('node_2', 'node_3'));
 

@@ -6,11 +6,6 @@ namespace Kynx\GraphQLite\Graph;
 
 use Kynx\GraphQLite\ValueObject\Edge;
 
-/**
- * @internal
- *
- * @phpstan-type EdgeArray = array{type: string, properties: array<string, mixed>}
- */
 interface EdgesInterface
 {
     /**

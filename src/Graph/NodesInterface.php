@@ -6,11 +6,6 @@ namespace Kynx\GraphQLite\Graph;
 
 use Kynx\GraphQLite\ValueObject\Node;
 
-/**
- * @internal
- *
- * @phpstan-type NodeArray = array{properties: array{id?: string, ...}}
- */
 interface NodesInterface
 {
     /**
@@ -26,7 +21,7 @@ interface NodesInterface
     /**
      * Create or update a node
      */
-    public function upsert(Node $node, string $label): void;
+    public function upsert(Node $node): void;
 
     /**
      * Delete a node by id

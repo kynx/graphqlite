@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace Kynx\GraphQLite\Graph;
 
 use Kynx\GraphQLite\ConnectionInterface;
+use Kynx\GraphQLite\Cypher\CypherUtil;
 use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Cypher\Util;
 use Kynx\GraphQLite\ValueObject\Node;
 
-use function array_merge;
+use function implode;
 use function is_array;
-use function is_scalar;
 use function json_decode;
-use function sprintf;
 
 /**
  * @internal
  *
- * @phpstan-type NodeArray = array{properties: array{id?: string, ...}}
+ * @phpstan-import-type NodeArray from Node
  */
 final readonly class Nodes implements NodesInterface
 {
@@ -29,10 +27,10 @@ final readonly class Nodes implements NodesInterface
     public function has(string $id): bool
     {
         /** @var Result<array{cnt: int}> $result */
-        $result = $this->connection->cypher(sprintf(
-            "MATCH (n {id: '%s'}) RETURN COUNT(n) AS cnt",
-            Util::escape($id)
-        ));
+        $result = $this->connection->cypher(
+            'MATCH (n {id: $id}) RETURN COUNT(n) AS cnt',
+            ['id' => $id]
+        );
         if ($result->count() === 0) {
             return false;
         }
@@ -43,70 +41,64 @@ final readonly class Nodes implements NodesInterface
     public function get(string $id): ?Node
     {
         /** @var Result<array{n: NodeArray}> $result */
-        $result = $this->connection->cypher(sprintf(
-            "MATCH (n {id: '%s'}) RETURN n",
-            Util::escape($id)
-        ));
+        $result = $this->connection->cypher(
+            'MATCH (n {id: $id}) RETURN n',
+            ['id' => $id]
+        );
         if ($result->count() === 0) {
             return null;
         }
 
         $current = $result->current();
-        return self::makeNode($current['n']);
+        return Node::fromArray($current['n']);
     }
 
-    public function upsert(Node $node, string $label): void
+    public function upsert(Node $node): void
     {
-        $properties = array_merge(['id' => $node->id], $node->data);
-
         if (! $this->has($node->id)) {
-            $this->connection->cypher(sprintf(
-                "CREATE (n:%s {%s})",
-                $label,
-                Util::formatProperties($properties)
-            ));
+            $labels     = implode(':', $node->labels);
+            $properties = CypherUtil::formatProperties(['id' => $node->id, ...$node->properties]);
+            $this->connection->cypher("CREATE (n:$labels $properties)");
 
             return;
         }
 
         // Cypher supports setting multiple properties in single statement, but GraphQList doesn't :|
-        foreach ($properties as $key => $value) {
-            $this->connection->cypher(sprintf(
-                "MATCH (n {id: '%s'}) SET n.%s = %s RETURN n",
-                Util::escape($node->id),
-                $key,
-                Util::formatProperty($value)
-            ));
+        foreach ($node->properties as $key => $value) {
+            $property = CypherUtil::formatProperty($value);
+            $this->connection->cypher(
+                "MATCH (n {id: \$id}) SET n.$key = $property RETURN n",
+                ['id' => $node->id],
+            );
         }
     }
 
     public function delete(string $id): void
     {
-        $this->connection->cypher(sprintf(
-            "MATCH (n {id: '%s'}) DETACH DELETE n",
-            Util::escape($id)
-        ));
+        $this->connection->cypher(
+            'MATCH (n {id: $id}) DETACH DELETE n',
+            ['id' => $id]
+        );
     }
 
     public function getAll(string $label = ''): array
     {
         if ($label === '') {
             /** @var Result<array{result: string}|array{n: NodeArray}> $result */
-            $result = $this->connection->cypher(
-                "MATCH (n) RETURN n"
-            );
+            $result = $this->connection->cypher("MATCH (n) RETURN n");
         } else {
+            /** @phpstan-ignore staticMethod.alreadyNarrowedType (Validation does more than type-narrowing!) */
+            CypherUtil::validateLabels([$label]);
             /** @var Result<array{result: string}|array{n: NodeArray}> $result */
-            $result = $this->connection->cypher(sprintf(
-                "MATCH (n:%s) RETURN n",
-                Util::escape($label)
-            ));
+            $result = $this->connection->cypher("MATCH (n:$label) RETURN n");
         }
 
         $nodes = [];
         foreach ($result as $row) {
+            // This stuff is a direct port of what python does.
             $node = null;
             if (isset($row['result'])) {
+                // @fixme When do we get this?
                 /** @var NodeArray|null|false $node */
                 $node = json_decode($row['result'], true);
             } elseif (isset($row['n']) && is_array($row['n'])) {
@@ -117,21 +109,9 @@ final readonly class Nodes implements NodesInterface
                 continue;
             }
 
-            $nodes[] = self::makeNode($node);
+            $nodes[] = Node::fromArray($node);
         }
 
         return $nodes;
-    }
-
-    /**
-     * @param NodeArray $node
-     */
-    public static function makeNode(array $node): Node
-    {
-        $properties = $node['properties'];
-        $id         = is_scalar($properties['id'] ?? null) ? (string) $properties['id'] : '';
-        unset($properties['id']);
-
-        return new Node($id, $properties);
     }
 }

@@ -34,7 +34,7 @@ final class NodesTest extends TestCase
 
     public function testHasReturnsTrue(): void
     {
-        $this->nodes->upsert(new Node('test_node'), 'Test');
+        $this->nodes->upsert(new Node('test_node', [], 'Test'));
 
         $actual = $this->nodes->has('test_node');
         self::assertTrue($actual);
@@ -48,8 +48,8 @@ final class NodesTest extends TestCase
 
     public function testGetReturnsNode(): void
     {
-        $expected = new Node('test_node', ['foo' => 'bar']);
-        $this->nodes->upsert($expected, 'Test');
+        $expected = new Node('test_node', ['foo' => 'bar'], 'Test');
+        $this->nodes->upsert($expected);
 
         $actual = $this->nodes->get('test_node');
         self::assertTrue($expected->equals($actual));
@@ -57,10 +57,10 @@ final class NodesTest extends TestCase
 
     public function testUpsertUpdatesNode(): void
     {
-        $expected = new Node('existing', ['foo' => 'baz']);
-        $existing = new Node('existing', ['foo' => 'bar']);
-        $this->nodes->upsert($existing, 'Test');
-        $this->nodes->upsert($expected, '');
+        $expected = new Node('existing', ['foo' => 'baz'], 'Test');
+        $existing = new Node('existing', ['foo' => 'bar'], 'Test');
+        $this->nodes->upsert($existing);
+        $this->nodes->upsert($expected);
 
         $actual = $this->nodes->get('existing');
         self::assertTrue($expected->equals($actual));
@@ -68,7 +68,7 @@ final class NodesTest extends TestCase
 
     public function testDeleteRemovesNode(): void
     {
-        $this->nodes->upsert(new Node('test_node'), 'Test');
+        $this->nodes->upsert(new Node('test_node', [], 'Test'));
         $this->nodes->delete('test_node');
 
         $actual = $this->nodes->has('test_node');
@@ -78,9 +78,9 @@ final class NodesTest extends TestCase
     public function testGetAllNodesReturnsAll(): void
     {
         $expected = ['n1', 'n2', 'n3'];
-        $this->nodes->upsert(new Node('n1', ['v' => 1]), 'Number');
-        $this->nodes->upsert(new Node('n2', ['v' => 2]), 'Number');
-        $this->nodes->upsert(new Node('n3', ['v' => 'a']), 'String');
+        $this->nodes->upsert(new Node('n1', ['v' => 1], 'Number'));
+        $this->nodes->upsert(new Node('n2', ['v' => 2], 'Number'));
+        $this->nodes->upsert(new Node('n3', ['v' => 'a'], 'String'));
 
         $actual = array_map(static fn (Node $node): string => $node->id, $this->nodes->getAll());
         self::assertSame($expected, $actual);
@@ -89,9 +89,9 @@ final class NodesTest extends TestCase
     public function testGetAllNodesReturnsMatchingLabels(): void
     {
         $expected = ['n1', 'n2'];
-        $this->nodes->upsert(new Node('n1', ['v' => 1]), 'Number');
-        $this->nodes->upsert(new Node('n2', ['v' => 2]), 'Number');
-        $this->nodes->upsert(new Node('n3', ['v' => 'a']), 'String');
+        $this->nodes->upsert(new Node('n1', ['v' => 1], 'Number'));
+        $this->nodes->upsert(new Node('n2', ['v' => 2], 'Number'));
+        $this->nodes->upsert(new Node('n3', ['v' => 'a'], 'String'));
 
         $actual = array_map(static fn (Node $node): string => $node->id, $this->nodes->getAll('Number'));
         self::assertSame($expected, $actual);

@@ -49,11 +49,11 @@ final readonly class Connection implements ConnectionInterface
     public function cypher(string $query, array $params = []): Result
     {
         if ($params !== []) {
-            $statement       = $this->connection->prepare('SELECT cypher(:query, :json)');
-            $statementParams = [':query' => $query, ':params' => json_encode($params)];
+            $statement       = $this->connection->prepare('SELECT cypher(?, ?)');
+            $statementParams = [$query, json_encode($params)];
         } else {
-            $statement       = $this->connection->prepare('SELECT cypher(:query)');
-            $statementParams = [':query' => $query];
+            $statement       = $this->connection->prepare('SELECT cypher(?)');
+            $statementParams = [$query];
         }
 
         try {
