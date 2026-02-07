@@ -13,6 +13,12 @@ parameters:
 			path: src/Cypher/Result.php
 
 		-
+			message: '#^Method Kynx\\GraphQLite\\Graph\:\:query\(\) return type with generic class Kynx\\GraphQLite\\Cypher\\Result does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Graph.php
+
+		-
 			message: '#^Method Kynx\\GraphQLite\\Graph\\Queries\:\:query\(\) return type with generic class Kynx\\GraphQLite\\Cypher\\Result does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -23,6 +29,12 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Graph/QueriesInterface.php
+
+		-
+			message: '#^Method Kynx\\GraphQLite\\GraphInterface\:\:query\(\) return type with generic class Kynx\\GraphQLite\\Cypher\\Result does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/GraphInterface.php
 
 		-
 			message: '#^Parameter \#1 \$a of static method Kynx\\GraphQLite\\ValueObject\\Util\:\:propertiesAreEqual\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
