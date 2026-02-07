@@ -17,6 +17,8 @@ use function is_scalar;
 use function is_string;
 use function preg_match;
 use function str_contains;
+use function str_ends_with;
+use function str_starts_with;
 use function strtoupper;
 use function substr;
 use function trim;
@@ -114,7 +116,7 @@ final readonly class CypherUtil
             throw InvalidIdentifierException::from($identifier);
         }
 
-        if (preg_match('/`.*`/', $trimmed)) {
+        if (str_starts_with($trimmed, '`') && str_ends_with($trimmed, '`')) {
             return;
         }
 

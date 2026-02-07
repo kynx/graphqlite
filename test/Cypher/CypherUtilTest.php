@@ -38,6 +38,7 @@ final class CypherUtilTest extends TestCase
             'reserved'      => ['match', "'match' is a Cypher reserved word"],
             'numeric start' => ['1abc', "'1abc' is not a valid Cypher identifier"],
             'non-word'      => ['foo?bar', "'foo?bar' is not a valid Cypher identifier"],
+            'backticks'     => ['f`oo`bar', "'f`oo`bar' is not a valid Cypher identifier"],
         ];
     }
 

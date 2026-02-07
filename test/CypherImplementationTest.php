@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests to figure out how closely GraphQLite's implementation the Cypher documentation
+ * Tests to figure out how closely GraphQLite's implementation follows the Cypher documentation
  */
 #[CoversNothing]
 final class CypherImplementationTest extends TestCase
@@ -115,6 +115,14 @@ final class CypherImplementationTest extends TestCase
         self::assertArrayNotHasKey('foo', $row['properties']);
     }
 
+    public function testPropertiesWithInvalidIdentifier(): void
+    {
+        self::expectException(InvalidQueryException::class);
+        self::expectExceptionMessage('unexpected INTEGER');
+
+        $this->connection->cypher("CREATE (n:Test {id: 'test', 1abc: 'foo'})");
+    }
+
     /**
      * Can't use parameter for properties - gotta stick with our manual escaping stuff :(
      */
@@ -134,6 +142,18 @@ final class CypherImplementationTest extends TestCase
         self::expectExceptionMessage('unexpected INTEGER');
 
         $this->connection->cypher("CREATE (n:1abc {id: 'test'})");
+    }
+
+    public function testLabelEscapedWithBackticks(): void
+    {
+        $expected = ['1abc'];
+        $this->connection->cypher("CREATE (n:`1abc` {id: 'test'})");
+
+        $result = $this->connection->cypher("MATCH (n {id: 'test'}) RETURN n");
+        $row    = $result->current()['n'];
+        self::assertIsArray($row);
+        self::assertArrayHasKey('labels', $row);
+        self::assertSame($expected, $row['labels']);
     }
 
     /**
@@ -163,7 +183,7 @@ final class CypherImplementationTest extends TestCase
     }
 
     /**
-     * Properties must be set individually :()
+     * Properties must be set individually :(
      */
     public function testSetAllProperties(): void
     {
