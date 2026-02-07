@@ -243,8 +243,9 @@ final class ConnectionTest extends TestCase
 
     public function testLoadExtensionWithPdoExceptionThrowsException(): void
     {
-        $database = self::createStub(Sqlite::class);
-        $database->method('query')
+        $database = $this->createMock(Sqlite::class);
+        $database->expects(self::once())
+            ->method('query')
             ->with('SELECT graphqlite_test()')
             ->willThrowException(new PDOException('Boom!'));
 
@@ -258,8 +259,9 @@ final class ConnectionTest extends TestCase
         $statement = self::createStub(PDOStatement::class);
         $statement->method('fetchColumn')
             ->willReturn('Failed to load');
-        $database = self::createStub(Sqlite::class);
-        $database->method('query')
+        $database = $this->createMock(Sqlite::class);
+        $database->expects(self::once())
+            ->method('query')
             ->with('SELECT graphqlite_test()')
             ->willReturn($statement);
 
