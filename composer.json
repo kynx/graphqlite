@@ -1,5 +1,5 @@
 {
-    "name": "kynx/graphqlite",
+    "name": "kynx/gqlite",
     "description": "Talk to embedded GraphQLite database",
     "type": "library",
     "license": "MIT",
