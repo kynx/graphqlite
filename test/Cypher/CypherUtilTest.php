@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Cypher;
+namespace KynxTest\GqLite\Cypher;
 
 use Exception;
-use Kynx\GraphQLite\Cypher\CypherUtil;
-use Kynx\GraphQLite\Exception\ExceptionInterface;
-use Kynx\GraphQLite\Exception\InvalidIdentifierException;
-use Kynx\GraphQLite\Exception\InvalidPropertyException;
+use Kynx\GqLite\Cypher\CypherUtil;
+use Kynx\GqLite\Exception\ExceptionInterface;
+use Kynx\GqLite\Exception\InvalidIdentifierException;
+use Kynx\GqLite\Exception\InvalidPropertyException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

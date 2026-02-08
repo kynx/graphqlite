@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Exception;
+namespace Kynx\GqLite\Exception;
 
 final class OutOfBoundsException extends \OutOfBoundsException implements ExceptionInterface
 {

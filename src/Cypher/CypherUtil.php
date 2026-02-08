@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Cypher;
+namespace Kynx\GqLite\Cypher;
 
-use Kynx\GraphQLite\Exception\InvalidIdentifierException;
-use Kynx\GraphQLite\Exception\InvalidPropertyException;
+use Kynx\GqLite\Exception\InvalidIdentifierException;
+use Kynx\GqLite\Exception\InvalidPropertyException;
 
 use function addslashes;
 use function get_debug_type;

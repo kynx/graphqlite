@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite;
+namespace KynxTest\GqLite;
 
 use Generator;
 use PHPUnit\Framework\Attributes\CoversNothing;

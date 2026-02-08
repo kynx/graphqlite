@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\ValueObject;
+namespace Kynx\GqLite\ValueObject;
 
-use Kynx\GraphQLite\Cypher\CypherUtil;
-use Kynx\GraphQLite\Exception\InvalidPropertyException;
+use Kynx\GqLite\Cypher\CypherUtil;
+use Kynx\GqLite\Exception\InvalidPropertyException;
 
 use function array_key_exists;
 use function array_unique;

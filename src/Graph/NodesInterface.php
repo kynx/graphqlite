@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Graph;
+namespace Kynx\GqLite\Graph;
 
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\ValueObject\Node;
 
 interface NodesInterface
 {

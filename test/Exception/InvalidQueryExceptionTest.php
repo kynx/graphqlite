@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Exception;
+namespace KynxTest\GqLite\Exception;
 
 use Exception;
-use Kynx\GraphQLite\Exception\InvalidQueryException;
+use Kynx\GqLite\Exception\InvalidQueryException;
 use PDOStatement;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

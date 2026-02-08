@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite;
+namespace KynxTest\GqLite;
 
-use Kynx\GraphQLite\Connection;
-use Kynx\GraphQLite\Exception\ExtensionException;
-use Kynx\GraphQLite\Exception\InvalidQueryException;
+use Kynx\GqLite\Connection;
+use Kynx\GqLite\Exception\ExtensionException;
+use Kynx\GqLite\Exception\InvalidQueryException;
 use Pdo\Sqlite;
 use PDOException;
 use PDOStatement;

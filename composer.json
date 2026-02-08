@@ -6,12 +6,12 @@
     "keywords": ["graphqlite", "graph database", "graph", "database", "sqlite"],
     "autoload": {
         "psr-4": {
-            "Kynx\\GraphQLite\\": "src/"
+            "Kynx\\GqLite\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "KynxTest\\GraphQLite\\": "test/"
+            "KynxTest\\GqLite\\": "test/"
         }
     },
     "authors": [

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GqLite;
 
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Graph\Edges;
-use Kynx\GraphQLite\Graph\Nodes;
-use Kynx\GraphQLite\Graph\Queries;
-use Kynx\GraphQLite\ValueObject\Stats;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Graph\Edges;
+use Kynx\GqLite\Graph\Nodes;
+use Kynx\GqLite\Graph\Queries;
+use Kynx\GqLite\ValueObject\Stats;
 
 final readonly class Graph implements GraphInterface
 {

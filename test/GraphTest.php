@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite;
+namespace KynxTest\GqLite;
 
-use Kynx\GraphQLite\Graph;
-use Kynx\GraphQLite\ValueObject\Edge;
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\Graph;
+use Kynx\GqLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

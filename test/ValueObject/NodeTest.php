@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\ValueObject;
+namespace KynxTest\GqLite\ValueObject;
 
-use Kynx\GraphQLite\Exception\InvalidIdentifierException;
-use Kynx\GraphQLite\Exception\InvalidPropertyException;
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\Exception\InvalidIdentifierException;
+use Kynx\GqLite\Exception\InvalidPropertyException;
+use Kynx\GqLite\ValueObject\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

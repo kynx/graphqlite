@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\ValueObject;
+namespace KynxTest\GqLite\ValueObject;
 
-use Kynx\GraphQLite\ValueObject\Util;
+use Kynx\GqLite\ValueObject\Util;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

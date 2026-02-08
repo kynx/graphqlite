@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GqLite;
 
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Graph\EdgesInterface;
-use Kynx\GraphQLite\Graph\NodesInterface;
-use Kynx\GraphQLite\ValueObject\Stats;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Graph\EdgesInterface;
+use Kynx\GqLite\Graph\NodesInterface;
+use Kynx\GqLite\ValueObject\Stats;
 
 // phpcs:disable Internal.ParseError.InterfaceHasMemberVar
 interface GraphInterface

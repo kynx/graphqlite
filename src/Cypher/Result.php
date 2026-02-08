@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Cypher;
+namespace Kynx\GqLite\Cypher;
 
 use Countable;
-use Kynx\GraphQLite\Exception\OutOfBoundsException;
+use Kynx\GqLite\Exception\OutOfBoundsException;
 use SeekableIterator;
 
 use function array_values;

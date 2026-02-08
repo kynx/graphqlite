@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Graph;
+namespace Kynx\GqLite\Graph;
 
-use Kynx\GraphQLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Edge;
 
 interface EdgesInterface
 {
