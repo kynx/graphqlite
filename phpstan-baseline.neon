@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Binary operation "\." between mixed and '' knows '' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: examples/create-graph-and-query.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: examples/create-graph-and-query.php
+
+		-
 			message: '#^Parameter \#1 \$data of class Kynx\\GraphQLite\\Cypher\\Result constructor expects array\<T of array\>, list given\.$#'
 			identifier: argument.type
 			count: 1
