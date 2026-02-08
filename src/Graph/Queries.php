@@ -99,11 +99,8 @@ final readonly class Queries implements QueriesInterface
         );
     }
 
-    /**
-     * Returns result of raw cypher query
-     */
-    public function query(string $cypher): Result
+    public function query(string $cypher, array $params): Result
     {
-        return $this->connection->cypher($cypher);
+        return $this->connection->cypher($cypher, $params);
     }
 }

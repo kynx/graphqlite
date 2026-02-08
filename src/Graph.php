@@ -33,9 +33,9 @@ final readonly class Graph implements GraphInterface
         );
     }
 
-    public function query(string $cypher): Result
+    public function query(string $cypher, array $params = []): Result
     {
-        return $this->queries->query($cypher);
+        return $this->queries->query($cypher, $params);
     }
 
     public function stats(): Stats

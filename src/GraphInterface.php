@@ -23,8 +23,10 @@ interface GraphInterface
 
     /**
      * Returns result of raw cypher query
+     *
+     * @param array<string, null|scalar> $params
      */
-    public function query(string $cypher): Result;
+    public function query(string $cypher, array $params = []): Result;
 
     /**
      * Returns statistics about the graph.

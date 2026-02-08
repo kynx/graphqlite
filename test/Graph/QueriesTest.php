@@ -149,7 +149,7 @@ final class QueriesTest extends TestCase
         $expected = new Result([['cnt' => 1]], ['cnt']);
         $this->nodes->upsert(new Node('n1', ['v' => 1], 'Node'));
 
-        $actual = $this->queries->query('MATCH (n) RETURN COUNT(n) AS cnt');
+        $actual = $this->queries->query('MATCH (n) RETURN COUNT(n) AS cnt', []);
         self::assertEquals($expected, $actual);
     }
 }
