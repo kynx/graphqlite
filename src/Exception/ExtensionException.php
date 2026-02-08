@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Exception;
+namespace Kynx\GqLite\Exception;
 
-use Kynx\GraphQLite\Exception\ExceptionInterface;
+use Kynx\GqLite\Exception\ExceptionInterface;
 use RuntimeException;
 use Throwable;
 

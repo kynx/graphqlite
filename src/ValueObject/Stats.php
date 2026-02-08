@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\ValueObject;
+namespace Kynx\GqLite\ValueObject;
 
 final readonly class Stats
 {

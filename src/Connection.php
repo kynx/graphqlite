@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GqLite;
 
 use JsonException;
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Exception\ExtensionException;
-use Kynx\GraphQLite\Exception\InvalidQueryException;
-use Kynx\GraphQLite\Exception\InvalidResultException;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Exception\ExtensionException;
+use Kynx\GqLite\Exception\InvalidQueryException;
+use Kynx\GqLite\Exception\InvalidResultException;
 use PDO;
 use Pdo\Sqlite;
 use PDOException;

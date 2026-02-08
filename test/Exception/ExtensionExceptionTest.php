@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Exception;
+namespace KynxTest\GqLite\Exception;
 
 use Exception;
-use Kynx\GraphQLite\Exception\ExtensionException;
+use Kynx\GqLite\Exception\ExtensionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

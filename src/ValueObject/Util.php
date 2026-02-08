@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\ValueObject;
+namespace Kynx\GqLite\ValueObject;
 
 use function array_keys;
 use function count;

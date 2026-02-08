@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Graph;
+namespace KynxTest\GqLite\Graph;
 
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Graph\Edges;
-use Kynx\GraphQLite\Graph\Nodes;
-use Kynx\GraphQLite\Graph\Queries;
-use Kynx\GraphQLite\ValueObject\Edge;
-use Kynx\GraphQLite\ValueObject\Node;
-use Kynx\GraphQLite\ValueObject\Stats;
-use KynxTest\GraphQLite\ConnectionTrait;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Graph\Edges;
+use Kynx\GqLite\Graph\Nodes;
+use Kynx\GqLite\Graph\Queries;
+use Kynx\GqLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Node;
+use Kynx\GqLite\ValueObject\Stats;
+use KynxTest\GqLite\ConnectionTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Graph;
+namespace Kynx\GqLite\Graph;
 
-use Kynx\GraphQLite\ConnectionInterface;
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\ValueObject\Edge;
-use Kynx\GraphQLite\ValueObject\Node;
-use Kynx\GraphQLite\ValueObject\Stats;
+use Kynx\GqLite\ConnectionInterface;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Node;
+use Kynx\GqLite\ValueObject\Stats;
 
 use function array_map;
 use function iterator_to_array;

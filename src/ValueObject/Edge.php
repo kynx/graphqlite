@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\ValueObject;
+namespace Kynx\GqLite\ValueObject;
 
-use Kynx\GraphQLite\Cypher\CypherUtil;
+use Kynx\GqLite\Cypher\CypherUtil;
 
 use function get_object_vars;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Exception;
+namespace KynxTest\GqLite\Exception;
 
 use JsonException;
-use Kynx\GraphQLite\Exception\InvalidResultException;
+use Kynx\GqLite\Exception\InvalidResultException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

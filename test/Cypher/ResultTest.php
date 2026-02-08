@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite\Cypher;
+namespace KynxTest\GqLite\Cypher;
 
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Exception\OutOfBoundsException;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Exception\OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

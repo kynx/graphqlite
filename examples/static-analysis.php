@@ -10,10 +10,10 @@
 
 declare(strict_types=1);
 
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\Graph;
-use Kynx\GraphQLite\ValueObject\Edge;
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\Graph;
+use Kynx\GqLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Node;
 
 require 'vendor/autoload.php';
 

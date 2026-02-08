@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite;
+namespace Kynx\GqLite;
 
-use Kynx\GraphQLite\Cypher\Result;
+use Kynx\GqLite\Cypher\Result;
 
 interface ConnectionInterface
 {

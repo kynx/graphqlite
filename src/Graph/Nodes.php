@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Kynx\GraphQLite\Graph;
+namespace Kynx\GqLite\Graph;
 
-use Kynx\GraphQLite\ConnectionInterface;
-use Kynx\GraphQLite\Cypher\CypherUtil;
-use Kynx\GraphQLite\Cypher\Result;
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\ConnectionInterface;
+use Kynx\GqLite\Cypher\CypherUtil;
+use Kynx\GqLite\Cypher\Result;
+use Kynx\GqLite\ValueObject\Node;
 
 use function implode;
 use function is_array;

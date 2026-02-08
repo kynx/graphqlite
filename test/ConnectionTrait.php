@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KynxTest\GraphQLite;
+namespace KynxTest\GqLite;
 
-use Kynx\GraphQLite\Connection;
+use Kynx\GqLite\Connection;
 use PHPUnit\Framework\TestCase;
 
 use function getenv;

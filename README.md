@@ -1,4 +1,4 @@
-# kynx/graphqlite
+# kynx/gqlite
 
 [![Continuous Integration](https://github.com/kynx/graphqlite/actions/workflows/continuous-integration.yml/badge.svg?branch=main)](https://github.com/kynx/graphqlite/actions/workflows/continuous-integration.yml)
 
@@ -13,7 +13,7 @@ something to handle the [GraphQL protocol], you're in the wrong place: try [Pack
 ## Installation
 
 ```bash
-composer require kynx/graphqlite
+composer require kynx/gqlite
 ```
 
 GraphQLite provides an SQLLite extension that must be available locally. There are a few ways to install it.
@@ -42,9 +42,9 @@ This library provides convenience methods to make managing the nodes and edges o
 also allows you to query the GraphQLite database using the [Cypher] language:
 
 ```php
-use Kynx\GraphQLite\Graph;
-use Kynx\GraphQLite\ValueObject\Edge;
-use Kynx\GraphQLite\ValueObject\Node;
+use Kynx\GqLite\Graph;
+use Kynx\GqLite\ValueObject\Edge;
+use Kynx\GqLite\ValueObject\Node;
 
 // replace with path to GraphQLite extension installed above
 $extensionPath = getenv('GRAPHQLITE_EXTENSION_PATH');
