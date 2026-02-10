@@ -85,11 +85,9 @@ final class CypherImplementationTest extends TestCase
         self::assertSame($expected, $row['properties']);
     }
 
-    /**
-     * Lists don't cause an error, but they're not saved
-     */
     public function testListInProperties(): void
     {
+        $expected = ['a', 'b'];
         $this->connection->cypher("CREATE (n:Test {id: 'test', foo: ['a', 'b']})");
 
         $result = $this->connection->cypher("MATCH (n {id: 'test'}) RETURN n");
@@ -97,7 +95,8 @@ final class CypherImplementationTest extends TestCase
         self::assertIsArray($row);
         self::assertArrayHasKey('properties', $row);
         self::assertIsArray($row['properties']);
-        self::assertArrayNotHasKey('foo', $row['properties']);
+        self::assertArrayHasKey('foo', $row['properties']);
+        self::assertSame($expected, $row['properties']['foo']);
     }
 
     /**
@@ -161,7 +160,7 @@ final class CypherImplementationTest extends TestCase
      */
     public function testMultipleLabels(): void
     {
-        $expected = ['A'];
+        $expected = ['A', 'B', 'C'];
         $this->connection->cypher("CREATE (n:A:B:C {id: 'test'})");
 
         $result = $this->connection->cypher("MATCH (n {id: 'test'}) RETURN n");
