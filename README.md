@@ -73,13 +73,14 @@ To learn more about GraphQLite, see the excellent [documentation].
 
 ## Nodes and Edges
 
-The `Graph` object has three entrypoints:
+The `Graph` object has a number entrypoints:
 
-| Entrypoint       | Description                |
-| ---------------- | -------------------------- |
-| `Graph::nodes`   | CRUD operations on nodes   |
-| `Graph::edges`   | CRUD operations on edges   |
-| `Graph::query()` | Execute raw Cypher queries |
+| Entrypoint          | Description                        |
+|---------------------|------------------------------------|
+| `Graph::nodes`      | CRUD operations on nodes           |
+| `Graph::edges`      | CRUD operations on edges           |
+| `Graph::traversals` | Breadth and depth-first traversals |
+| `Graph::query()`    | Execute raw Cypher queries         |
 
 The CRUD operations consume and return `Node` and `Edge` value objects.
 
@@ -135,7 +136,10 @@ Just as with SQL, do **not** pass user input directly into the query. Instead us
 they are sanitized. Cypher uses the dollar sign to denote a placeholder:
 
 ```php
-$results = $graph->query('MATCH (a {name: $name})-[:KNOWS]->(b) RETURN a, b', ['name' => $_GET['name']]);
+$results = $graph->query(
+    'MATCH (a {name: $name})-[:KNOWS]->(b) RETURN a, b',
+    ['name' => $_GET['name']]
+);
 ```
 
 **Make sure your query is single-quoted so PHP variables are not expanded!**
