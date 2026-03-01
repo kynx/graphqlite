@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -x -o pipefail
 
-GRAPHQLITE_VERSION="v0.3.4"
+GRAPHQLITE_VERSION="v0.3.5"
 GRAPHQLITE_SHA256=113ff2efe432d6910fed41c58da73a9bf656e7fd822bfe61c166c80b109a1300
 
 WORKDIR=$2
