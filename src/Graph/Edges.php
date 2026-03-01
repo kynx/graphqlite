@@ -10,6 +10,7 @@ use Kynx\GqLite\Cypher\Result;
 use Kynx\GqLite\ValueObject\Edge;
 
 use function array_map;
+use function implode;
 use function iterator_to_array;
 
 /**
@@ -23,11 +24,12 @@ final readonly class Edges implements EdgesInterface
     {
     }
 
-    public function has(string $sourceId, string $targetId): bool
+    public function has(string $sourceId, string $targetId, ?string $relation = null): bool
     {
+        $relation = $this->makeRelation($relation);
         /** @var Result<array{cnt: int}> $result */
         $result = $this->connection->cypher(
-            'MATCH (a {id: $sourceId})-[r]->(b {id: $targetId}) RETURN COUNT(r) AS cnt',
+            "MATCH (a {id: \$sourceId})-[$relation]->(b {id: \$targetId}) RETURN COUNT(r) AS cnt",
             ['sourceId' => $sourceId, 'targetId' => $targetId],
         );
 
@@ -38,11 +40,12 @@ final readonly class Edges implements EdgesInterface
         return (bool) $result->current()['cnt'];
     }
 
-    public function get(string $sourceId, string $targetId): ?Edge
+    public function get(string $sourceId, string $targetId, ?string $relation = null): ?Edge
     {
+        $relation = $this->makeRelation($relation);
         /** @var Result<EdgeArray> $result */
         $result = $this->connection->cypher(
-            'MATCH (a {id: $sourceId})-[r]->(b {id: $targetId}) RETURN a.id AS sourceId, b.id AS targetId, r',
+            "MATCH (a {id: \$sourceId})-[$relation]->(b {id: \$targetId}) RETURN a.id AS sourceId, b.id AS targetId, r",
             ['sourceId' => $sourceId, 'targetId' => $targetId],
         );
 
@@ -55,29 +58,32 @@ final readonly class Edges implements EdgesInterface
 
     public function upsert(Edge $edge): void
     {
-        if ($this->has($edge->sourceId, $edge->targetId)) {
-            return;
-        }
+        $this->connection->cypher(
+            "MATCH (a {id: \$sourceId}), (b {id: \$targetId}) MERGE (a)-[r:$edge->relation]->(b)",
+            ['sourceId' => $edge->sourceId, 'targetId' => $edge->targetId],
+        );
 
         if ($edge->properties === []) {
-            $this->connection->cypher(
-                "MATCH (a {id: \$sourceId}), (b {id: \$targetId}) CREATE (a)-[r:$edge->relation]->(b)",
-                ['sourceId' => $edge->sourceId, 'targetId' => $edge->targetId],
-            );
             return;
         }
 
-        $properties = CypherUtil::formatProperties($edge->properties);
+        $properties = [];
+        foreach ($edge->properties as $key => $value) {
+            $properties[] = "r.$key = " . CypherUtil::formatProperty($value);
+        }
+        $setValues = implode(', ', $properties);
+
         $this->connection->cypher(
-            "MATCH (a {id: \$sourceId}), (b {id: \$targetId}) CREATE (a)-[r:$edge->relation $properties]->(b)",
+            "MATCH (a {id: \$sourceId})-[r:$edge->relation]->(b {id: \$targetId}) SET $setValues",
             ['sourceId' => $edge->sourceId, 'targetId' => $edge->targetId],
         );
     }
 
-    public function delete(string $sourceId, string $targetId): void
+    public function delete(string $sourceId, string $targetId, ?string $relation = null): void
     {
+        $relation = $this->makeRelation($relation);
         $this->connection->cypher(
-            "MATCH (a {id: $sourceId})-[r]->(b {id: $targetId}) DELETE r",
+            "MATCH (a {id: \$sourceId})-[$relation]->(b {id: \$targetId}) DELETE r",
             ['sourceId' => $sourceId, 'targetId' => $targetId],
         );
     }
@@ -93,5 +99,15 @@ final readonly class Edges implements EdgesInterface
             static fn (array $row): Edge => Edge::fromArray($row),
             iterator_to_array($result)
         );
+    }
+
+    private function makeRelation(?string $relation): string
+    {
+        if ($relation === null) {
+            return 'r';
+        } else {
+            CypherUtil::validateIdentifier($relation);
+            return "r:$relation";
+        }
     }
 }
