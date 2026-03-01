@@ -8,6 +8,7 @@ use Kynx\GqLite\Cypher\Result;
 use Kynx\GqLite\Graph\Edges;
 use Kynx\GqLite\Graph\Nodes;
 use Kynx\GqLite\Graph\Queries;
+use Kynx\GqLite\Graph\Traversals;
 use Kynx\GqLite\ValueObject\Stats;
 
 final readonly class Graph implements GraphInterface
@@ -15,6 +16,7 @@ final readonly class Graph implements GraphInterface
     private function __construct(
         public Nodes $nodes,
         public Edges $edges,
+        public Traversals $traversals,
         private Queries $queries
     ) {
     }
@@ -29,6 +31,7 @@ final readonly class Graph implements GraphInterface
         return new self(
             new Nodes($connection),
             new Edges($connection),
+            new Traversals($connection),
             new Queries($connection)
         );
     }

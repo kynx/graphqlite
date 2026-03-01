@@ -197,7 +197,7 @@ final readonly class CypherUtil
     /**
      * Returns escaped string for use in Cypher queries
      */
-    private static function escape(string $value): string
+    public static function escape(string $value): string
     {
         return addslashes($value);
     }

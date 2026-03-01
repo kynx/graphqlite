@@ -48,6 +48,7 @@ final class GraphTest extends TestCase
 
         self::assertTrue($graph->nodes->has('n1'));
         self::assertTrue($graph->edges->has('n1', 'n2'));
+        self::assertCount(2, $graph->traversals->breadthFirst('n1'));
         self::assertSame(2, $stats->nodes);
     }
 
